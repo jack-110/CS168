@@ -8,13 +8,20 @@ Authors:
 # NOTE: This file is written in POX style.
 
 
-import sim.api as api
-
+from ..sim import api
 
 # Host discovery packets are treated as an implementation detail --
 # they're how we know when to call add_static_route().  Thus, we make
 # them invisible in the simulator.
-from sim.basics import HostDiscoveryPacket
+from ..sim.basics import HostDiscoveryPacket
+
+
+# import abc
+from collections import namedtuple
+from numbers import Number  # Available in Python >= 2.7.
+import unittest
+
+from ..sim.api import HostEntity, get_name, current_time
 
 HostDiscoveryPacket.outer_color = [0, 0, 0, 0]
 HostDiscoveryPacket.inner_color = [0, 0, 0, 0]
@@ -39,7 +46,8 @@ class RoutePacket(api.Packet):
         self.inner_color = [1, 0, 1, 1]
 
     def __repr__(self):
-        return "<RoutePacket to %s at cost %s>" % (self.destination, self.latency)
+        return "<RoutePacket to %s at cost %s>" % (
+            self.destination, self.latency)
 
 
 class Ports:
@@ -96,7 +104,8 @@ class DVRouterBase(api.Entity):
         """
         if isinstance(packet, RoutePacket):
             self.expire_routes()
-            self.handle_route_advertisement(packet.destination, packet.latency, port)
+            self.handle_route_advertisement(
+                packet.destination, packet.latency, port)
         elif isinstance(packet, HostDiscoveryPacket):
             self.add_static_route(packet.src, port)
         else:
@@ -156,28 +165,22 @@ class DVRouterBase(api.Entity):
         try:
             if api.netvis.selected.name == self.name:
                 self.log(format, *args)
-        except:
+        except BaseException:
             self.log(format, *args)
 
 
 # TODO: Move this stuff to top of file?
-
-# import abc
-from collections import namedtuple
-from numbers import Number  # Available in Python >= 2.7.
-import unittest
-
-from sim.api import HostEntity, get_name, current_time
-
 
 # Used for a time ininitely in the future.
 # (e.g., for routes that should never time out)
 FOREVER = float("+inf")  # Denotes forever in time.
 INFINITY = 100
 
+
 # FIXME: Make FOREVER an internal thing and fix the way it gets formatted in __str__?
 #       Instead, have expiration time = None (a default?) mean forever?  (Internally,
-#       we may want to set it to +inf just because that should do the right thing?)
+# we may want to set it to +inf just because that should do the right
+# thing?)
 
 
 class _ValidatedDict(dict):
@@ -242,7 +245,8 @@ class Table(_ValidatedDict):
         return o
 
 
-class TableEntry(namedtuple("TableEntry", ["dst", "port", "latency", "expire_time"])):
+class TableEntry(namedtuple(
+        "TableEntry", ["dst", "port", "latency", "expire_time"])):
     """
     An entry in a Table, representing a route from a neighbor to some
     destination host.
@@ -272,12 +276,21 @@ class TableEntry(namedtuple("TableEntry", ["dst", "port", "latency", "expire_tim
             raise ValueError("Provided port %s is not an integer" % (port,))
 
         if not isinstance(expire_time, Number):
-            raise ValueError("Provided expire time %s is not a number" % (expire_time,))
+            raise ValueError(
+                "Provided expire time %s is not a number" %
+                (expire_time,))
 
         if not isinstance(latency, Number):
             raise ValueError("Provided latency %s is not a number" % latency)
 
-        self = super(TableEntry, cls).__new__(cls, dst, port, latency, expire_time)
+        self = super(
+            TableEntry,
+            cls).__new__(
+            cls,
+            dst,
+            port,
+            latency,
+            expire_time)
         return self
 
     @property
@@ -370,8 +383,14 @@ class TestTableEntry(unittest.TestCase):
         host1 = HostEntity()
         host1.name = "host1"
 
-        rte1 = TableEntry(dst=host1, latency=10, expire_time=TableEntry.FOREVER)
-        rte2 = TableEntry(dst=host1, latency=10, expire_time=TableEntry.FOREVER)
+        rte1 = TableEntry(
+            dst=host1,
+            latency=10,
+            expire_time=TableEntry.FOREVER)
+        rte2 = TableEntry(
+            dst=host1,
+            latency=10,
+            expire_time=TableEntry.FOREVER)
         self.assertEqual(rte1, rte2)
         self.assertTrue(rte1 == rte2)
         self.assertFalse(rte1 != rte2)
