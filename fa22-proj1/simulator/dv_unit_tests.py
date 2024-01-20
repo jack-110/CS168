@@ -1,5 +1,4 @@
 from __future__ import print_function
-from mock import patch
 import sys
 import os
 import random
@@ -13,14 +12,14 @@ from cs168.dv import RoutePacket, Table, TableEntry, DVRouterBase, FOREVER, INFI
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(dir_path, "lib"))
+from mock import patch
 
 
 class Route(namedtuple("RouteAd", ["dst", "latency"])):
     """Helper class for checking route advertisements."""
 
     def __repr__(self):
-        return "RouteAd(dst={}, latency={})".format(
-            get_name(self.dst), self.latency)
+        return "RouteAd(dst={}, latency={})".format(get_name(self.dst), self.latency)
 
 
 def eprint(*args, **kwargs):
@@ -64,13 +63,13 @@ class TestDVRouterBase(unittest.TestCase):
     """Base class for DVRouter tests."""
 
     def _set_up(
-            self,
-            poison_reverse,
-            poison_expired,
-            poison_on_link_down,
-            split_horizon,
-            send_on_link_up,
-            triggered=False,
+        self,
+        poison_reverse,
+        poison_expired,
+        poison_on_link_down,
+        split_horizon,
+        send_on_link_up,
+        triggered=False,
     ):
         # Raise an error if time.time() is called.
         call_time_error = AssertionError(
@@ -130,8 +129,7 @@ class TestDVRouterBase(unittest.TestCase):
         self.assertGreaterEqual(
             new_time,
             self._current_time,
-            "BUG: turning time back from {} to {}".format(
-                self._current_time, new_time),
+            "BUG: turning time back from {} to {}".format(self._current_time, new_time),
         )
         self._current_time = new_time
 
@@ -156,8 +154,7 @@ class TestDVRouterBase(unittest.TestCase):
 
         def _send(packet, port=None, flood=None):
             """Emulates `send`."""
-            self.assertIsInstance(
-                packet, Packet, "{} is not a Packet".format(packet))
+            self.assertIsInstance(packet, Packet, "{} is not a Packet".format(packet))
             if packet.src is None:
                 packet.src = self.router
 
@@ -175,10 +172,7 @@ class TestDVRouterBase(unittest.TestCase):
                 ports = _all_ports - ports
 
             for port in ports:
-                self.assertIn(
-                    port,
-                    sent_packets,
-                    "invalid port number {}".format(port))
+                self.assertIn(port, sent_packets, "invalid port number {}".format(port))
                 sent_packets[port].append(packet)
 
         with patch.object(self.router, "send", side_effect=_send):
@@ -194,8 +188,7 @@ class TestDVRouterBase(unittest.TestCase):
             self.assertListEqual(
                 packets,
                 [],
-                "unexpected packet(s) sent to port {}: {}".format(
-                    port, packets),
+                "unexpected packet(s) sent to port {}: {}".format(port, packets),
             )
 
     @contextmanager
@@ -245,8 +238,7 @@ class TestDVRouterBase(unittest.TestCase):
                     if not allow_dup:
                         self.fail(
                             "duplicate route advertisement for HOST {} sent "
-                            "to PORT {} (latency={})".format(
-                                get_name(dst), port, lat)
+                            "to PORT {} (latency={})".format(get_name(dst), port, lat)
                         )
 
     def _add_test_routes_raw(self):
@@ -382,7 +374,7 @@ class TestDVRouterBase(unittest.TestCase):
             self.fail(failure)
         else:
             if len(expected) > 0 and not "TableEntry" in str(
-                    (type(expected[list(expected.keys())[0]]))
+                (type(expected[list(expected.keys())[0]]))
             ):
                 self.assertDictEqual(t, expected, "BUG: dicts should be equal")
 
@@ -401,21 +393,18 @@ class TestDVRouterBase(unittest.TestCase):
         message = ""
 
         for port in sorted(sent.keys()):
-            self.assertIsInstance(
-                port, int, "BUG: port {} is not a int".format(port))
+            self.assertIsInstance(port, int, "BUG: port {} is not a int".format(port))
             self.assertIsInstance(
                 sent[port], list, "BUG: {} is not a list".format(sent[port])
             )
             self.assertIsInstance(
-                expected[port], list, "BUG: {} is not a list".format(
-                    expected[port])
+                expected[port], list, "BUG: {} is not a list".format(expected[port])
             )
 
             if sent[port] != expected[port]:
                 failed = True
                 message += "\n\nMISMATCH detected for packets sent to PORT %d:\n" % port
-                message += "\tEXPECTED packets sent: %s\n" % dps(
-                    expected[port])
+                message += "\tEXPECTED packets sent: %s\n" % dps(expected[port])
                 message += "\tACTUAL packets sent:   %s\n" % dps(sent[port])
 
         if failed:
@@ -452,14 +441,12 @@ class TestDVRouterBase(unittest.TestCase):
         message = ""
 
         for port in sorted(sent.keys()):
-            self.assertIsInstance(
-                port, int, "BUG: port {} is not a int".format(port))
+            self.assertIsInstance(port, int, "BUG: port {} is not a int".format(port))
             self.assertIsInstance(
                 sent[port], dict, "BUG: {} is not a dict".format(sent[port])
             )
             self.assertIsInstance(
-                expected[port], dict, "BUG: {} is not a list".format(
-                    expected[port])
+                expected[port], dict, "BUG: {} is not a list".format(expected[port])
             )
 
             failure = self._compute_dict_diff(
@@ -511,14 +498,12 @@ class TestDVRouterBase(unittest.TestCase):
         message = ""
 
         for port in sorted(sent.keys()):
-            self.assertIsInstance(
-                port, int, "BUG: port {} is not a int".format(port))
+            self.assertIsInstance(port, int, "BUG: port {} is not a int".format(port))
             self.assertIsInstance(
                 sent[port], dict, "BUG: {} is not a dict".format(sent[port])
             )
             self.assertIsInstance(
-                expected[port], dict, "BUG: {} is not a list".format(
-                    expected[port])
+                expected[port], dict, "BUG: {} is not a list".format(expected[port])
             )
 
             failure = self._compute_dict_diff(
@@ -591,17 +576,13 @@ class TestStarterCode(TestDVRouterBase):
         self.router.handle_link_up(port=1234, latency=42)
 
         ex_link_lat = {1234: 42}  # Expected link latency table.
-        self.assertDictEqual(
-            self.router.ports.get_underlying_dict(),
-            ex_link_lat)
+        self.assertDictEqual(self.router.ports.get_underlying_dict(), ex_link_lat)
 
         # Add a second link!
         self.router.handle_link_up(port=1, latency=0.1)
 
         ex_link_lat.update({1: 0.1})
-        self.assertDictEqual(
-            self.router.ports.get_underlying_dict(),
-            ex_link_lat)
+        self.assertDictEqual(self.router.ports.get_underlying_dict(), ex_link_lat)
 
     def test_handle_link_down(self):
         """Tests handler for link down."""
@@ -609,24 +590,18 @@ class TestStarterCode(TestDVRouterBase):
         self.router.handle_link_up(port=1234, latency=42)
 
         ex_link_lat = {1234: 42}  # Expected link latency table.
-        self.assertDictEqual(
-            self.router.ports.get_underlying_dict(),
-            ex_link_lat)
+        self.assertDictEqual(self.router.ports.get_underlying_dict(), ex_link_lat)
 
         # Add a second link!
         self.router.handle_link_up(port=1, latency=0.1)
 
         ex_link_lat.update({1: 0.1})
-        self.assertDictEqual(
-            self.router.ports.get_underlying_dict(),
-            ex_link_lat)
+        self.assertDictEqual(self.router.ports.get_underlying_dict(), ex_link_lat)
 
         # Remove second link.
         self.router.handle_link_down(port=1)
         del ex_link_lat[1]
-        self.assertDictEqual(
-            self.router.ports.get_underlying_dict(),
-            ex_link_lat)
+        self.assertDictEqual(self.router.ports.get_underlying_dict(), ex_link_lat)
 
 
 class TestStaticRoutes(TestDVRouterBase):
@@ -1038,9 +1013,7 @@ class TestRemoveRoutes(TestDVRouterBase):
         packet = Packet(dst=h1, src=h2)
         with self._patch_send(all_ports={1, 2, 3, 10}) as sent_packets:
             self.router.handle_data_packet(packet, in_port=10)
-        self._assert_packets_sent(
-            sent_packets, {
-                1: [packet], 2: [], 3: [], 10: []})
+        self._assert_packets_sent(sent_packets, {1: [packet], 2: [], 3: [], 10: []})
 
         self._set_current_time(114)
         self.router.expire_routes()
@@ -1161,8 +1134,7 @@ class TestInfiniteLoops(TestDVRouterBase):
         """Propagate a poisoned forwarding entry."""
         h2 = self.h2
         h1 = self.h1
-        self.router.handle_route_advertisement(
-            route_dst=h2, route_latency=1, port=3)
+        self.router.handle_route_advertisement(route_dst=h2, route_latency=1, port=3)
 
         with self._patch_send_routes(all_ports={1, 2, 3, 10}, allow_dup=True) as ads:
             self.router.handle_route_advertisement(
@@ -1208,15 +1180,12 @@ class TestInfiniteLoops(TestDVRouterBase):
 
         h1, h2 = self.h1, self.h2
         # The route to h1 comes back!
-        self.router.handle_route_advertisement(
-            route_dst=h1, port=1, route_latency=1)
+        self.router.handle_route_advertisement(route_dst=h1, port=1, route_latency=1)
 
         packet = Packet(dst=h1, src=h2)
         with self._patch_send(all_ports={1, 2, 3, 10}) as sent_packets:
             self.router.handle_data_packet(packet, in_port=10)
-        self._assert_packets_sent(
-            sent_packets, {
-                1: [packet], 2: [], 3: [], 10: []})
+        self._assert_packets_sent(sent_packets, {1: [packet], 2: [], 3: [], 10: []})
 
 
 class TestRoutePoisoning(TestDVRouterBase):
@@ -1438,13 +1407,13 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
     """
 
     def _set_up_routes(
-            self,
-            sub_poison_reverse=True,
-            sub_poison_expired=True,
-            sub_poison_on_link_down=True,
-            sub_split_horizon=False,
-            sub_send_on_link_up=True,
-            sub_triggered=True,
+        self,
+        sub_poison_reverse=True,
+        sub_poison_expired=True,
+        sub_poison_on_link_down=True,
+        sub_split_horizon=False,
+        sub_send_on_link_up=True,
+        sub_triggered=True,
     ):
         self._set_up(
             sub_poison_reverse,
@@ -1457,13 +1426,13 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         self._add_test_routes_proper()
 
     def _set_up_routes_directly(
-            self,
-            sub_poison_reverse=True,
-            sub_poison_expired=True,
-            sub_poison_on_link_down=True,
-            sub_split_horizon=False,
-            sub_send_on_link_up=True,
-            sub_triggered=True,
+        self,
+        sub_poison_reverse=True,
+        sub_poison_expired=True,
+        sub_poison_on_link_down=True,
+        sub_split_horizon=False,
+        sub_send_on_link_up=True,
+        sub_triggered=True,
     ):
         """
         Adds some simple test routes.
@@ -1568,31 +1537,21 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         )
 
     def assert_no_poisoning(self):
-        self.assertFalse(
-            self.router.POISON_REVERSE,
-            "poison reverse should be off")
-        self.assertFalse(
-            self.router.POISON_EXPIRED,
-            "poison expired should be off")
+        self.assertFalse(self.router.POISON_REVERSE, "poison reverse should be off")
+        self.assertFalse(self.router.POISON_EXPIRED, "poison expired should be off")
         self.assertFalse(
             self.router.POISON_ON_LINK_DOWN, "poison on link down should be off"
         )
 
     def assert_full_poisoning(self):
-        self.assertTrue(
-            self.router.POISON_REVERSE,
-            "poison reverse should be on")
-        self.assertTrue(
-            self.router.POISON_EXPIRED,
-            "poison expired should be on")
+        self.assertTrue(self.router.POISON_REVERSE, "poison reverse should be on")
+        self.assertTrue(self.router.POISON_EXPIRED, "poison expired should be on")
         self.assertTrue(
             self.router.POISON_ON_LINK_DOWN, "poison on link down should be on"
         )
         # self.assertTrue(self.router.TRIGGERED,
         #                "triggered updates should be on")
-        self.assertFalse(
-            self.router.SPLIT_HORIZON,
-            "split horizon should be off")
+        self.assertFalse(self.router.SPLIT_HORIZON, "split horizon should be off")
 
     def test_new_route(self):
         """Triggered update when new route is shortest."""
@@ -1608,8 +1567,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
             self.router.handle_route_advertisement(h1, port=2, route_latency=1)
 
         self._assert_route_ads_sent(
-            ads, {1: {Route(h1, 2)}, 2: set(), 3: {
-                Route(h1, 2)}, 10: {Route(h1, 2)}}
+            ads, {1: {Route(h1, 2)}, 2: set(), 3: {Route(h1, 2)}, 10: {Route(h1, 2)}}
         )
         self.assert_no_poisoning()
 
@@ -1637,8 +1595,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         h1 = self.h1
         # self.router.send_routes(force=True)
         with self._ensure_no_send(all_ports={1, 2, 3, 10}):
-            self.router.handle_route_advertisement(
-                h1, port=2, route_latency=INFINITY)
+            self.router.handle_route_advertisement(h1, port=2, route_latency=INFINITY)
 
     def test_non_shortest_route_longer(self):
         """No triggered update advertisements should be sent if no updates."""
@@ -1898,8 +1855,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         )
 
         with self._ensure_no_send(all_ports={1, 2, 3}):
-            self.router.handle_route_advertisement(
-                h1, port=3, route_latency=10)
+            self.router.handle_route_advertisement(h1, port=3, route_latency=10)
 
         with self._patch_send_routes(all_ports={1, 2, 3}) as ads:
             self.router.handle_route_advertisement(h2, port=3, route_latency=2)
@@ -1923,8 +1879,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         with self._patch_send_routes(all_ports={1, 2, 3}) as ads:
             self.router.handle_route_advertisement(h1, port=1, route_latency=3)
         self._assert_route_ads_sent(
-            ads, {1: {Route(h1, INFINITY)}, 2: {
-                Route(h1, 8)}, 3: {Route(h1, 8)}}
+            ads, {1: {Route(h1, INFINITY)}, 2: {Route(h1, 8)}, 3: {Route(h1, 8)}}
         )
 
         self._assert_table_equal(
@@ -1936,19 +1891,16 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         with self._patch_send_routes(all_ports={1, 2, 3}) as ads:
             self.router.handle_route_advertisement(h2, port=2, route_latency=6)
         self._assert_route_ads_sent(
-            ads, {1: {Route(h2, 7)}, 2: {Route(h2, INFINITY)},
-                  3: {Route(h2, 7)}}
+            ads, {1: {Route(h2, 7)}, 2: {Route(h2, INFINITY)}, 3: {Route(h2, 7)}}
         )
 
         with self._ensure_no_send(all_ports={1, 2, 3}):
-            self.router.handle_route_advertisement(
-                h1, port=3, route_latency=10)
+            self.router.handle_route_advertisement(h1, port=3, route_latency=10)
 
         with self._patch_send_routes(all_ports={1, 2, 3}) as ads:
             self.router.handle_route_advertisement(h2, port=3, route_latency=2)
         self._assert_route_ads_sent(
-            ads, {1: {Route(h2, 5)}, 2: {Route(h2, 5)},
-                  3: {Route(h2, INFINITY)}}
+            ads, {1: {Route(h2, 5)}, 2: {Route(h2, 5)}, 3: {Route(h2, INFINITY)}}
         )
 
     def _test_handle_link_down_update(self, expected_advertisements):
@@ -2006,8 +1958,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         # Route for h3 should be through port 1.
         actual = self.router.table[h3].port
         self.assertEqual(
-            actual, 1, "route for HOST h3 should take PORT 1, not {}".format(
-                actual)
+            actual, 1, "route for HOST h3 should take PORT 1, not {}".format(actual)
         )
         if not self.router.POISON_ON_LINK_DOWN:
             with self._patch_send_routes(all_ports={2, 3, 10}) as ads:
@@ -2117,11 +2068,9 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         self._set_up_routes()
         h1 = self.h1
 
-        self.router.handle_route_advertisement(
-            h1, port=1, route_latency=INFINITY)
+        self.router.handle_route_advertisement(h1, port=1, route_latency=INFINITY)
         with self._patch_send_routes(all_ports={1, 2, 3, 10}) as ads:
-            self.router.handle_route_advertisement(
-                h1, port=3, route_latency=10)
+            self.router.handle_route_advertisement(h1, port=3, route_latency=10)
 
         self._assert_route_ads_sent(
             ads,
@@ -2139,8 +2088,7 @@ class TestTriggeredIncrementalUpdates(TestDVRouterBase):
         h1 = self.h1
 
         with self._ensure_no_send(all_ports={1, 2, 3, 10}):
-            self.router.handle_route_advertisement(
-                h1, port=3, route_latency=INFINITY)
+            self.router.handle_route_advertisement(h1, port=3, route_latency=INFINITY)
 
     def test_expire_advertise_poison_incremental(self):
         """Ensures that poison ads are sent incrementally (from expiry)."""
