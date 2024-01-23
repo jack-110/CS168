@@ -85,7 +85,9 @@ class DVRouter(DVRouterBase):
         :param in_port: the port from which the packet arrived.
         :return: nothing.
         """
-        # TODO: fill this in!
+        for host, entry in self.table.items():
+            if packet.dst == host and not entry.latency >= INFINITY:
+                self.send(packet, entry.port)
 
     def send_routes(self, force=False, single_port=None):
         """
@@ -98,7 +100,9 @@ class DVRouter(DVRouterBase):
                             be used in conjunction with handle_link_up.
         :return: nothing.
         """
-        # TODO: fill this in!
+        for port in self.ports.get_all_ports():
+            for host, entry in self.table.items():
+                self.send_route(port, host, entry.latency)
 
     def expire_routes(self):
         """
