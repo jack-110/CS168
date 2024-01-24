@@ -18,7 +18,6 @@ from cs168.dv import (
 
 
 class DVRouter(DVRouterBase):
-
     # A route should time out after this interval
     ROUTE_TTL = 15
 
@@ -44,7 +43,7 @@ class DVRouter(DVRouterBase):
         However, feel free to add to it for memory purposes in the final stage!
         """
         assert not (
-            self.SPLIT_HORIZON and self.POISON_REVERSE
+                self.SPLIT_HORIZON and self.POISON_REVERSE
         ), "Split horizon and poison reverse can't both be on"
 
         self.start_timer()  # Starts signaling the timer at correct rate.
@@ -116,7 +115,6 @@ class DVRouter(DVRouterBase):
                 expired.append(host)
         for host in expired:
             self.table.pop(host)
-
 
     def handle_route_advertisement(self, route_dst, route_latency, port):
         """
