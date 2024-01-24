@@ -109,7 +109,14 @@ class DVRouter(DVRouterBase):
         Clears out expired routes from table.
         accordingly.
         """
-        # TODO: fill this in!
+        expired = []
+        for host, entry in self.table.items():
+            if entry.expire_time <= api.current_time():
+                self.log("clear expired route: host %s, port %s", host, entry.port)
+                expired.append(host)
+        for host in expired:
+            self.table.pop(host)
+
 
     def handle_route_advertisement(self, route_dst, route_latency, port):
         """
@@ -120,7 +127,16 @@ class DVRouter(DVRouterBase):
         :param port: the port that the advertisement arrived on.
         :return: nothing.
         """
-        # TODO: fill this in!
+        expire_time = api.current_time() + self.ROUTE_TTL
+        new_latency = self.ports.get_latency(port) + route_latency
+        if route_dst in self.table.keys():
+            current_route = self.table[route_dst]
+            # come from the same port, always replacement
+            # come from different port, break ties by choosing the current route
+            if current_route.port == port or current_route.latency > new_latency:
+                self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
+        else:
+            self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
 
     def handle_link_up(self, port, latency):
         """

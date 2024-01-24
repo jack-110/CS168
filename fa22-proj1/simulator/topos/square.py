@@ -9,5 +9,5 @@ def launch(
     Loads a square topology specified in cs168.square_asym.topo.
     """
     loader.launch(
-        "./cs168/square_isomer.topo", switch_type=switch_type, host_type=host_type
+        "fa22-proj1/simulator/cs168/square_isomer.topo", switch_type=switch_type, host_type=host_type
     )
