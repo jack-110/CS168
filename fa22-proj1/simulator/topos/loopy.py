@@ -8,4 +8,4 @@ def launch(
     """
     Loads a square topology specified in cs168.square_asym.topo.
     """
-    loader.launch("./cs168/loopy4.topo", switch_type=switch_type, host_type=host_type)
+    loader.launch("fa22-proj1/simulator/cs168/loopy4.topo", switch_type=switch_type, host_type=host_type)

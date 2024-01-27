@@ -24,7 +24,7 @@ class DVRouter(DVRouterBase):
     # -----------------------------------------------
     # At most one of these should ever be on at once
     SPLIT_HORIZON = False
-    POISON_REVERSE = False
+    POISON_REVERSE = True
     # -----------------------------------------------
 
     # Determines if you send poison for expired routes
@@ -101,7 +101,10 @@ class DVRouter(DVRouterBase):
         """
         for port in self.ports.get_all_ports():
             for host, entry in self.table.items():
-                self.send_route(port, host, entry.latency)
+                if self.POISON_REVERSE and port == entry.port:
+                    self.send_route(port, host, latency=INFINITY)
+                elif not (self.SPLIT_HORIZON and port == entry.port):
+                    self.send_route(port, host, entry.latency)
 
     def expire_routes(self):
         """
@@ -111,7 +114,7 @@ class DVRouter(DVRouterBase):
         expired = []
         for host, entry in self.table.items():
             if entry.expire_time <= api.current_time():
-                self.log("clear expired route: host %s, port %s", host, entry.port)
+                self.log("clear expired route: host %s, latency %d", host, entry.latency)
                 expired.append(host)
         for host in expired:
             self.table.pop(host)
@@ -130,11 +133,18 @@ class DVRouter(DVRouterBase):
         if route_dst in self.table.keys():
             current_route = self.table[route_dst]
             # come from the same port, always replacement
-            # come from different port, break ties by choosing the current route
-            if current_route.port == port or current_route.latency > new_latency:
+            if current_route.port == port:
+                if route_latency == INFINITY:
+                    self.table[route_dst] = TableEntry(route_dst, port, INFINITY, current_route.expire_time)
+                else:
+                    self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
+            elif current_route.latency > new_latency and route_latency != INFINITY:
+                # come from different port, break ties by choosing the current route
                 self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
         else:
-            self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
+            # new route
+            if route_latency != INFINITY:
+                self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
 
     def handle_link_up(self, port, latency):
         """
