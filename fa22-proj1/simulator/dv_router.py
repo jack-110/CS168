@@ -134,15 +134,22 @@ class DVRouter(DVRouterBase):
             current_route = self.table[route_dst]
             # come from the same port, always replacement
             if current_route.port == port:
+                # If a poisoned advertisement (latency INFINITY) matches the destination and port of a current route
+                #   replace it with the poisoned entry for poison propagation.
+                # Do not recharge the timer of a poisoned route in your table when a new advertisement comes in.
                 if route_latency == INFINITY:
                     self.table[route_dst] = TableEntry(route_dst, port, INFINITY, current_route.expire_time)
                 else:
                     self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
+            # Any incoming routes with latency INFINITY that don’t match destination and port with a current
+            #   route should be ignored.
             elif current_route.latency > new_latency and route_latency != INFINITY:
-                # come from different port, break ties by choosing the current route
+                # come from different port, break ties by choosing the current route.
                 self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
         else:
             # new route
+            # Any incoming routes with latency INFINITY that don’t match destination and port with a current
+            #   route should be ignored.
             if route_latency != INFINITY:
                 self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
 
