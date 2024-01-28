@@ -1,13 +1,5 @@
-"""
-Your awesome Distance Vector router for CS 168
-
-Based on skeleton code by:
-  MurphyMc, zhangwen0411, lab352
-"""
-
 import sim.api as api
 from cs168.dv import (
-    RoutePacket,
     Table,
     TableEntry,
     DVRouterBase,
@@ -54,7 +46,8 @@ class DVRouter(DVRouterBase):
 
         # This is the table that contains all current routes
         self.table = Table()
-        self.history = Table()
+        self.history = {}
+        self.record = {}
         self.table.owner = self
 
     def add_static_route(self, host, port):
@@ -82,6 +75,7 @@ class DVRouter(DVRouterBase):
         You may want to forward the packet, drop the packet, etc. here.
 
         :param packet: the packet that arrived.
+
         :param in_port: the port from which the packet arrived.
         :return: nothing.
         """
@@ -95,27 +89,34 @@ class DVRouter(DVRouterBase):
         Send route advertisements for all routes in the table.
 
         :param force: if True, advertises ALL routes in the table;
-                      otherwise, advertises only those routes that have
-                      changed since the last advertisement.
-               single_port: if not None, sends updates only to that port; to
-                            be used in conjunction with handle_link_up.
+            otherwise, advertises only those routes that have changed since the last advertisement.
+        :param single_port: if not None, sends updates only to that port;
+            to be used in conjunction with handle_link_up.
         :return: nothing.
         """
         for host, route in self.table.items():
-            if not force:
-                if host in self.history.keys():
-                    old_route = self.history[host]
-                    if old_route.port == route.port and old_route.latency == route.latency:
-                        continue
-            for port in self.ports.get_all_ports():
-                if self.POISON_REVERSE and port == route.port:
-                    self.send_route(port, host, INFINITY)
-                    self.history[host] = TableEntry(host, route.port, route.latency, route.expire_time)
-                elif self.SPLIT_HORIZON and port == route.port:
+            ports = []
+            if single_port is None:
+                ports = self.ports.get_all_ports()
+            else:
+                ports.append(single_port)
+            for port in ports:
+                if self.SPLIT_HORIZON and port == route.port:
                     continue
+                elif self.POISON_REVERSE and port == route.port:
+                    if not force:
+                        if (host, route.port) in self.history.keys():
+                            if self.history[(host, route.port)] == INFINITY:
+                                continue
+                    self.send_route(port, host, INFINITY)
+                    self.history[(host, port)] = INFINITY
                 else:
+                    if not force:
+                        if (host, port) in self.history.keys():
+                            if self.history[(host, port)] == route.latency:
+                                continue
                     self.send_route(port, host, route.latency)
-                    self.history[host] = TableEntry(host, route.port, route.latency, route.expire_time)
+                    self.history[(host, port)] = route.latency
 
     def expire_routes(self):
         """
@@ -140,7 +141,7 @@ class DVRouter(DVRouterBase):
 
         :param route_dst: the destination of the advertised route.
         :param route_latency: latency from the neighbor to the destination.
-        :param port: the port that the advertisement arrived on.
+        :param port: the port that the advertisement arrived at.
         :return: nothing.
         """
         expire_time = api.current_time() + self.ROUTE_TTL
@@ -154,6 +155,7 @@ class DVRouter(DVRouterBase):
                 # Do not recharge the timer of a poisoned route in your table when a new advertisement comes in.
                 if route_latency == INFINITY:
                     self.table[route_dst] = TableEntry(route_dst, port, INFINITY, current_route.expire_time)
+                    self.send_routes()
                 else:
                     self.table[route_dst] = TableEntry(route_dst, port, new_latency, expire_time)
                     self.send_routes()
