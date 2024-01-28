@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3445505b-5867-47df-ac28-0fdba6f0c3aa" name="Changes" comment="stage 10: Becoming Eventful.">
+    <list default="true" id="3445505b-5867-47df-ac28-0fdba6f0c3aa" name="Changes" comment="fix bug.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +42,7 @@
     "Python tests.Python tests for dv_unit_tests.TestStaticRoutes.test_add_static_route.executor": "Debug",
     "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.executor": "Run",
     "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_consecutive.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental.executor": "Debug",
+    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental.executor": "Run",
     "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_handle_link_down_update.executor": "Run",
     "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental.executor": "Run",
     "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental_multiple.executor": "Run",
@@ -56,7 +55,7 @@
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
-  <component name="RunManager" selected="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental">
+  <component name="RunManager" selected="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_poison_alternate_route">
     <configuration name="Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="CS168" />
       <option name="ENV_FILES" value="" />
@@ -134,10 +133,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental" />
-        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates" />
-        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse" />
         <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_poison_alternate_route" />
+        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates" />
+        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental" />
+        <item itemvalue="Python tests.Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse" />
         <item itemvalue="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental" />
       </list>
     </recent_temporary>
@@ -238,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706447826271</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix bug.">
+      <option name="closed" value="true" />
+      <created>1706458662122</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1706458662122</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,7 +269,8 @@
     <MESSAGE value="add comments." />
     <MESSAGE value="stage 9: Poisoning Expired Routes." />
     <MESSAGE value="stage 10: Becoming Eventful." />
-    <option name="LAST_COMMIT_MESSAGE" value="stage 10: Becoming Eventful." />
+    <MESSAGE value="fix bug." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -279,28 +287,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py</url>
-          <line>2072</line>
-          <option name="timeStamp" value="99" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py</url>
           <line>2100</line>
           <option name="timeStamp" value="123" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py</url>
-          <line>193</line>
-          <option name="timeStamp" value="129" />
+          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py</url>
+          <line>1425</line>
+          <option name="timeStamp" value="145" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py</url>
-          <line>195</line>
-          <option name="timeStamp" value="130" />
+          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py</url>
+          <line>302</line>
+          <option name="timeStamp" value="146" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py</url>
-          <line>106</line>
-          <option name="timeStamp" value="132" />
+          <url>file://$PROJECT_DIR$/fa22-proj1/simulator/dv_unit_tests.py</url>
+          <line>308</line>
+          <option name="timeStamp" value="147" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
