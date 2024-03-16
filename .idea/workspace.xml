@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3445505b-5867-47df-ac28-0fdba6f0c3aa" name="Changes" comment="fix bug.">
+      <change beforePath="$PROJECT_DIR$/.idea/CS168.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CS168.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/fa22-proj1/simulator/dv_router.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,31 +31,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for dv_unit_tests.TestAdvertise.test_send_routes.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestForwarding.test_forward.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestHandleAdvertisement.test_multiple_neighbors.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestHandleAdvertisement.test_single_neighbor.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestRoutePoisoning.test_expire_routes_single.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestStarterCode.test_handle_link_up.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestStaticRoutes.test_add_static_route.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_consecutive.executor": "Debug",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_handle_link_down_update.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental_multiple.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_new_route.executor": "Run",
-    "Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_poison_alternate_route.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Lenovo/Desktop/CS168",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for dv_unit_tests.TestAdvertise.test_send_routes.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestForwarding.test_forward.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestHandleAdvertisement.test_multiple_neighbors.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestHandleAdvertisement.test_single_neighbor.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestRoutePoisoning.test_expire_routes_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestStarterCode.test_handle_link_up.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestStaticRoutes.test_add_static_route.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_consecutive.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_expire_advertise_poison_incremental.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_handle_link_down_update.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_link_down_advertise_poison_incremental_multiple.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_new_route.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_poison_alternate_route.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/cy/Desktop/CS168&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python tests.Python tests for dv_unit_tests.TestTriggeredIncrementalUpdates.test_poison_alternate_route">
     <configuration name="Python tests for dv_unit_tests.TestPoisonReverse.test_poison_reverse" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="CS168" />
@@ -144,7 +145,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
       </set>
     </attachedChunks>
   </component>
