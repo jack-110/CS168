@@ -600,25 +600,30 @@ class StudentUSocket(StudentUSocketBase):
                         CLOSE_WAIT, CLOSING, LAST_ACK, TIME_WAIT):
       if self.acceptable_seg(seg, payload):
         ## Start of Stage 2 ##
-        if self.rcv.nxt |EQ| seg.seq:
-          self.handle_accepted_seg(seg, payload)
-        else:
-          #todo how to drop a packet
-          self.set_pending_ack()
+        #if self.rcv.nxt |EQ| seg.seq:
+        #  self.handle_accepted_seg(seg, payload)
+        #else:
+        #  self.set_pending_ack()
         ## End of Stage 2 ##
-        pass
         ## Start of Stage 3 ##
         # you may need to remove Stage 2's code.
-
+        self.rx_queue.push(p)
         ## End of Stage 3 ##
       else:
         self.set_pending_ack()
 
-     
     ## Start of Stage 3 ##
     # checking recv queue
     # Hint: data = packet.app[self.rcv.nxt |MINUS| packet.tcp.seq:]
-
+    while not self.rx_queue.empty():
+      seq = self.rx_queue.peek()[0]
+      if seq |GT| self.rcv.nxt:
+        self.set_pending_ack()
+        break
+      else:
+        packet = self.rx_queue.pop()[1]
+        data = packet.app[self.rcv.nxt | MINUS | packet.tcp.seq:]
+        self.handle_accepted_seg(packet.tcp, data)
     ## End of Stage 3 ##
 
     self.maybe_send()
