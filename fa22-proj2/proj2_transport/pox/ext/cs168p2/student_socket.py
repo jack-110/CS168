@@ -565,7 +565,7 @@ class StudentUSocket(StudentUSocketBase):
     if (p.tcp.SYN or p.tcp.FIN or p.tcp.payload) and not retxed:
 
       ## Start of Stage 4 ##
-
+      self.snd.nxt = self.snd.nxt |PLUS| len(p.tcp.payload)
       ## End of Stage 4 ##
       pass
 
@@ -709,7 +709,7 @@ class StudentUSocket(StudentUSocketBase):
     """
 
     ## Start of Stage 5 ##
-    self.snd.wnd = self.TX_DATA_MAX # remove when implemented
+    self.snd.wnd = seg.win # remove when implemented
     self.snd.wl1 = seg.seq
     self.snd.wl2 = seg.ack
 
@@ -723,7 +723,7 @@ class StudentUSocket(StudentUSocketBase):
     acceptable_seg()
     """
     ## Start of Stage 4 ##
-
+    self.snd.una = seg.ack
     ## End of Stage 4    ##
 
 
@@ -776,7 +776,13 @@ class StudentUSocket(StudentUSocketBase):
     # fifth, check ACK field
     if self.state in (ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT, CLOSING):
       ## Start of Stage 4 ##
-
+      if snd.una | LT | seg.ack and seg.ack | LE | snd.nxt:
+        self.handle_accepted_ack(seg)
+      elif seg.ack |LE| snd.una:
+        pass
+      elif seg.ack |GT| snd.nxt:
+        self.set_pending_ack()
+        return False
       ## End of Stage 4 ##
 
       if snd.una |LE| seg.ack and seg.ack |LE| snd.nxt:
@@ -845,12 +851,20 @@ class StudentUSocket(StudentUSocketBase):
     bytes_sent = 0
 
     ## Start of Stage 4 ##
-    remaining = 0
-    while remaining > 0:
-
+    remaining = len(self.tx_data)
+    bytes_in_fly = snd.nxt - snd.una
+    while remaining > 0 and bytes_in_fly |LE| snd.wnd:
+      if snd.wnd |EQ| 0:
+        return
+      payload = self.tx_data[:min(self.mss, snd.wnd)]
+      packet = self.new_packet(ack=True, data=payload, syn=False)
+      self.tx(packet)
       num_pkts += 1
       bytes_sent += len(payload)
-
+      remaining = remaining - len(payload)
+      bytes_in_fly = bytes_in_fly + len(payload)
+      self.tx_data = self.tx_data[len(payload):]
+      self.log.debug("******************sent {0} packets********************".format(num_pkts))
     self.log.debug("sent {0} packets with {1} bytes total".format(num_pkts, bytes_sent))
     ## End of Stage 4 ##
 
