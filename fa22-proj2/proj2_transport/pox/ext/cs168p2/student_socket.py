@@ -486,7 +486,7 @@ class StudentUSocket(StudentUSocketBase):
       raise RuntimeError("close() is invalid in FIN_WAIT states")
     elif self.state is CLOSE_WAIT:
       ## Start of Stage 6 ##
-
+      self.fin_ctrl.set_pending(LAST_ACK)
       ## End of Stage 6 ##
       pass
     elif self.state in (CLOSING,LAST_ACK,TIME_WAIT):
@@ -754,7 +754,10 @@ class StudentUSocket(StudentUSocketBase):
     self.log.info("Got FIN!")
 
     ## Start of Stage 6 ##
-
+    self.rcv.nxt = seg.seq |PLUS| 1
+    self.set_pending_ack()
+    if self.state is ESTABLISHED:
+      self.state = CLOSE_WAIT
     ## End of Stage 6 ##
 
 
@@ -799,7 +802,9 @@ class StudentUSocket(StudentUSocketBase):
     elif self.state == CLOSING:
       pass
     elif self.state == LAST_ACK:
-      pass
+      if self.fin_ctrl.sent_seqno == seg.ack:
+        self._delete_tcb()
+        self.state = CLOSED
     elif self.state == TIME_WAIT:
       # restart the 2 msl timeout
       self.set_pending_ack()
