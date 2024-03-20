@@ -564,7 +564,8 @@ class StudentUSocket(StudentUSocketBase):
 
 
     if (p.tcp.SYN or p.tcp.FIN or p.tcp.payload) and not retxed:
-
+      p.tx_ts = self.stack.now
+      self.retx_queue.push(p)
       ## Start of Stage 4 ##
       self.snd.nxt = self.snd.nxt |PLUS| len(p.tcp.payload)
       ## End of Stage 4 ##
@@ -729,7 +730,7 @@ class StudentUSocket(StudentUSocketBase):
 
 
     ## Start of Stage 8 ##
-
+    self.retx_queue.pop_upto(seg.ack)
     ## End of Stage 8 ##
 
 
@@ -909,17 +910,19 @@ class StudentUSocket(StudentUSocketBase):
     """
 
     ## Start of Stage 8 ##
-    time_in_queue = 0 # modify when implemented
+    if not self.retx_queue.empty():
+      p = self.retx_queue.get_earliest_pkt()[1]
+      time_in_queue = self.stack.now - p.tx_ts
 
     ## End of Stage 8 ##
 
-    if time_in_queue > self.rto:
-      self.log.debug("earliest packet seqno={0} rto={1} being rtxed".format(p.tcp.seq, self.rto))
-      self.tx(p, retxed=True)
+      if time_in_queue > self.rto:
+        self.log.debug("earliest packet seqno={0} rto={1} being rtxed".format(p.tcp.seq, self.rto))
+        self.tx(p, retxed=True)
 
-      ## Start of Stage 9 ##
+        ## Start of Stage 9 ##
 
-      ## End of Stage 9 ##
+        ## End of Stage 9 ##
 
   def set_pending_ack(self):
     """
